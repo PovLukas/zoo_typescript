@@ -1,15 +1,25 @@
-type CanDo = SleepAndWalk | JumpAndRun | SwimAndHunt;
+const animalName = document.getElementById("animal-name") as HTMLInputElement
+const animalAge = document.getElementById("animal-age") as HTMLInputElement
+const animalButton = document.getElementById("animal-submit-button") as HTMLButtonElement
 
+const employeeAtZoo = document.getElementById("employee-location") as HTMLInputElement
+const employeeSafety = document.getElementById("employee-safety") as HTMLInputElement
+const employeeButton = document.getElementById("employee-submit-button") as HTMLButtonElement
+
+const listOfEmployees = document.getElementById("employee-list") as HTMLButtonElement
+const listOfAnimals = document.getElementById("animal-list") as HTMLButtonElement
 
 
 
 class Animal {
     name: string;
     age: number;
+    createdDate: Date
     
     constructor(name: string, age:number) {
         this.name = name;
         this.age = age;
+        this.createdDate = new Date()
     }
 
     makeSound(sound: string) {
@@ -79,13 +89,14 @@ abstract class Employee {
 
     isEmployeeAtZoo: boolean;
     safetyTrainingCompletionDate: string;
+    createdDate: Date
 
     constructor(isEmployeeAtZoo: boolean, safetyTrainingCompletionDate: string ) {
         this.isEmployeeAtZoo = isEmployeeAtZoo;
         this.safetyTrainingCompletionDate = safetyTrainingCompletionDate;
+        this.createdDate = new Date()
     }
 }
-
 
 
 const whenFed: { animal: string, dateFed: Date }[] = [];
@@ -147,3 +158,46 @@ class Animals {
     const employee = new Zookeeper(true, "Balandzio 14")
 
     employeeList.addEmployee(employee)
+
+
+    console.log(zoo.animalList)
+
+
+    employeeButton?.addEventListener("click", () => {
+        const newEmployee = new Zookeeper(employeeAtZoo?.checked, employeeSafety?.value)
+        employeeList.addEmployee(newEmployee)
+        
+    })
+
+    animalButton.addEventListener("click", () => {
+        const newAnimal = new Animal(animalName.value, parseInt(animalAge.value))
+        zoo.addAnimal(newAnimal)
+        
+    })
+
+
+    listOfAnimals.addEventListener("click", () => {
+        console.log(zoo.animalList)
+    })
+
+    listOfEmployees.addEventListener("click", () => {
+        console.log(employeeList.employeeList)
+    })
+
+
+    class Logger {
+        static instance: Logger;
+
+        private constructor() {}
+
+    public static getInstance(): Logger {
+        if (!Logger.instance) {
+            Logger.instance = new Logger();
+        }
+        return Logger.instance;
+    }
+
+    public log() {
+        
+    }
+    }

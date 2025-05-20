@@ -1,8 +1,17 @@
 "use strict";
+const animalName = document.getElementById("animal-name");
+const animalAge = document.getElementById("animal-age");
+const animalButton = document.getElementById("animal-submit-button");
+const employeeAtZoo = document.getElementById("employee-location");
+const employeeSafety = document.getElementById("employee-safety");
+const employeeButton = document.getElementById("employee-submit-button");
+const listOfEmployees = document.getElementById("employee-list");
+const listOfAnimals = document.getElementById("animal-list");
 class Animal {
     constructor(name, age) {
         this.name = name;
         this.age = age;
+        this.createdDate = new Date();
     }
     makeSound(sound) {
         console.log(sound);
@@ -39,6 +48,7 @@ class Employee {
     constructor(isEmployeeAtZoo, safetyTrainingCompletionDate) {
         this.isEmployeeAtZoo = isEmployeeAtZoo;
         this.safetyTrainingCompletionDate = safetyTrainingCompletionDate;
+        this.createdDate = new Date();
     }
 }
 const whenFed = [];
@@ -86,3 +96,29 @@ class Employees {
 const employeeList = new Employees();
 const employee = new Zookeeper(true, "Balandzio 14");
 employeeList.addEmployee(employee);
+console.log(zoo.animalList);
+employeeButton === null || employeeButton === void 0 ? void 0 : employeeButton.addEventListener("click", () => {
+    const newEmployee = new Zookeeper(employeeAtZoo === null || employeeAtZoo === void 0 ? void 0 : employeeAtZoo.checked, employeeSafety === null || employeeSafety === void 0 ? void 0 : employeeSafety.value);
+    employeeList.addEmployee(newEmployee);
+});
+animalButton.addEventListener("click", () => {
+    const newAnimal = new Animal(animalName.value, parseInt(animalAge.value));
+    zoo.addAnimal(newAnimal);
+});
+listOfAnimals.addEventListener("click", () => {
+    console.log(zoo.animalList);
+});
+listOfEmployees.addEventListener("click", () => {
+    console.log(employeeList.employeeList);
+});
+class Logger {
+    constructor() { }
+    static getInstance() {
+        if (!Logger.instance) {
+            Logger.instance = new Logger();
+        }
+        return Logger.instance;
+    }
+    log() {
+    }
+}
