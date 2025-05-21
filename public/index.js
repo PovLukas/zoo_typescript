@@ -105,20 +105,41 @@ animalButton.addEventListener("click", () => {
     const newAnimal = new Animal(animalName.value, parseInt(animalAge.value));
     zoo.addAnimal(newAnimal);
 });
-listOfAnimals.addEventListener("click", () => {
-    console.log(zoo.animalList);
-});
-listOfEmployees.addEventListener("click", () => {
-    console.log(employeeList.employeeList);
-});
+class ConsoleLogger {
+    print(message) {
+        console.log(message);
+    }
+}
 class Logger {
-    constructor() { }
-    static getInstance() {
+    constructor(strategy) {
+        this.logs = [];
+        this.strategy = strategy;
+    }
+    static getInstance(strategy) {
         if (!Logger.instance) {
-            Logger.instance = new Logger();
+            Logger.instance = new Logger(strategy || new ConsoleLogger());
         }
         return Logger.instance;
     }
-    log() {
+    log(message) {
+        this.logs.push(message);
+        this.strategy.print(message);
+    }
+    getLogs() {
+        return this.logs;
+    }
+    setLoggerStrategy(strategy) {
+        this.strategy = strategy;
     }
 }
+const logger = Logger.getInstance();
+listOfAnimals.addEventListener("click", () => {
+    zoo.animalList.forEach(animal => {
+        logger.log(`Animal - Name: ${animal.name}, Age: ${animal.age}, Created: ${animal.createdDate}`);
+    });
+});
+listOfEmployees.addEventListener("click", () => {
+    employeeList.employeeList.forEach(employee => {
+        logger.log(`Employee - At Zoo: ${employee.isEmployeeAtZoo}, Training Date: ${employee.safetyTrainingCompletionDate}, Created: ${employee.createdDate}`);
+    });
+});

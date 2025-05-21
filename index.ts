@@ -176,28 +176,58 @@ class Animals {
     })
 
 
-    listOfAnimals.addEventListener("click", () => {
-        console.log(zoo.animalList)
-    })
 
-    listOfEmployees.addEventListener("click", () => {
-        console.log(employeeList.employeeList)
-    })
+ interface LoggerStrategy {
+    print(message: string): void;
+}
 
+class ConsoleLogger implements LoggerStrategy {
+    print(message: string): void {
+        console.log(message);
+    }
+}
 
-    class Logger {
-        static instance: Logger;
+class Logger {
+    private static instance: Logger;
+    private logs: string[] = [];
+    private strategy: LoggerStrategy;
 
-        private constructor() {}
+    private constructor(strategy: LoggerStrategy) {
+        this.strategy = strategy;
+    }
 
-    public static getInstance(): Logger {
+    public static getInstance(strategy?: LoggerStrategy): Logger {
         if (!Logger.instance) {
-            Logger.instance = new Logger();
+            Logger.instance = new Logger(strategy || new ConsoleLogger());
         }
         return Logger.instance;
     }
 
-    public log() {
-        
+    public log(message: string): void {
+        this.logs.push(message);
+        this.strategy.print(message);
     }
+
+    public getLogs(): string[] {
+        return this.logs;
     }
+
+    public setLoggerStrategy(strategy: LoggerStrategy): void {
+        this.strategy = strategy;
+    }
+}
+
+
+const logger = Logger.getInstance();
+
+listOfAnimals.addEventListener("click", () => {
+    zoo.animalList.forEach(animal => {
+        logger.log(`Animal - Name: ${animal.name}, Age: ${animal.age}, Created: ${animal.createdDate}`);
+    });
+});
+
+listOfEmployees.addEventListener("click", () => {
+    employeeList.employeeList.forEach(employee => {
+        logger.log(`Employee - At Zoo: ${employee.isEmployeeAtZoo}, Training Date: ${employee.safetyTrainingCompletionDate}, Created: ${employee.createdDate}`);
+    });
+});
